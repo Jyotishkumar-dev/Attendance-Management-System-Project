@@ -90,3 +90,108 @@
     letter-spacing: 0.02em;
   }
 }
+
+/* ===========================
+   PREMIUM LOGIN UI
+=========================== */
+
+body {
+  background: linear-gradient(135deg,#0f172a,#111827,#1e293b);
+}
+
+.login-bg{
+  position:relative;
+  min-height:100vh;
+  overflow:hidden;
+}
+
+.login-bg::before{
+  content:"";
+  position:absolute;
+  width:450px;
+  height:450px;
+  border-radius:50%;
+  background:#3b82f6;
+  filter:blur(170px);
+  top:-120px;
+  left:-120px;
+  opacity:.35;
+}
+
+.login-bg::after{
+  content:"";
+  position:absolute;
+  width:450px;
+  height:450px;
+  border-radius:50%;
+  background:#8b5cf6;
+  filter:blur(180px);
+  bottom:-150px;
+  right:-150px;
+  opacity:.35;
+}
+
+.glass-card{
+  backdrop-filter:blur(24px);
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.15);
+  border-radius:24px;
+  box-shadow:0 25px 60px rgba(0,0,0,.35);
+}
+
+.input{
+  transition:.25s;
+}
+
+.input:hover{
+  transform:translateY(-1px);
+}
+
+.input:focus{
+  box-shadow:0 0 0 4px rgba(59,130,246,.2);
+}
+
+.btn-primary{
+  transition:.25s;
+}
+
+.btn-primary:hover{
+  transform:translateY(-2px);
+  box-shadow:0 18px 40px rgba(0,0,0,.25);
+} 
+
+.glass-input{
+  width:100%;
+  padding:14px 18px;
+  border-radius:16px;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.15);
+  color:white;
+  backdrop-filter:blur(20px);
+  transition:.3s;
+}
+
+.glass-input::placeholder{
+  color:rgba(255,255,255,.5);
+}
+
+.glass-input:focus{
+  border-color:#38bdf8;
+  box-shadow:0 0 20px rgba(56,189,248,.35);
+  outline:none;
+}
+
+.glass-btn{
+  width:100%;
+  padding:15px;
+  border-radius:16px;
+  background:linear-gradient(135deg,#2563eb,#7c3aed);
+  color:white;
+  font-weight:700;
+  transition:.35s;
+}
+
+.glass-btn:hover{
+  transform:translateY(-2px);
+  box-shadow:0 15px 35px rgba(37,99,235,.4);
+}
