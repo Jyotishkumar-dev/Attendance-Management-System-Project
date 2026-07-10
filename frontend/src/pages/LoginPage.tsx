@@ -1,295 +1,75 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Mail, Lock, Eye, EyeOff, ArrowRight, BarChart3, Sparkles } from "lucide-react"; 
-import { motion, useMotionValue, useTransform, AnimatePresence } from "framer-motion";
+import { Mail, Lock, Eye, EyeOff, ArrowRight } from "lucide-react";
+import { motion } from "framer-motion";
 import { useAuth } from "../context/AuthContext";
 
 /**
-   * SmartAttend brand mark.
-   * A verification checkmark fused with three connected AI "nodes" inside a
-   * rounded shield — reads as trust + verification + intelligence without
-   * leaning on a literal graduation cap or book.
+ * SmartAttend brand mark — custom SVG, not a Lucide icon.
+ * Kept as the checkmark/AI-node mark (rather than a graduation cap) per the
+ * brand direction already established for this project.
  */
-function BrandLogo({ size = 36 }: { size?: number }) {
+function BrandLogo({ size = 34 }: { size?: number }) {
   return (
     <div className="group relative flex items-center justify-center" style={{ width: size, height: size }}>
-      <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-purple-500/40 via-indigo-500/40 to-cyan-400/40 opacity-0 blur-md transition-opacity duration-500 group-hover:opacity-100" />
-      <svg
-        viewBox="0 0 40 40"
-        width={size}
-        height={size}
-        className="relative transition-transform duration-500 group-hover:scale-105 group-hover:rotate-3"
-      >
+      <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-[#7C3AED]/40 via-[#8B5CF6]/40 to-[#06B6D4]/40 opacity-0 blur-md transition-opacity duration-500 group-hover:opacity-100" />
+      <svg viewBox="0 0 40 40" width={size} height={size} className="relative transition-transform duration-500 group-hover:scale-105 group-hover:rotate-3">
         <defs>
           <linearGradient id="brandGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#a855f7" />
-            <stop offset="50%" stopColor="#6366f1" />
-            <stop offset="100%" stopColor="#22d3ee" />
+            <stop offset="0%" stopColor="#7C3AED" />
+            <stop offset="55%" stopColor="#8B5CF6" />
+            <stop offset="100%" stopColor="#06B6D4" />
           </linearGradient>
         </defs>
         <rect x="3" y="3" width="34" height="34" rx="11" stroke="url(#brandGrad)" strokeWidth="2" fill="none" />
-        {/* AI nodes */}
         <circle cx="13" cy="12" r="1.8" fill="url(#brandGrad)" />
         <circle cx="27" cy="12" r="1.8" fill="url(#brandGrad)" />
         <circle cx="20" cy="8" r="1.8" fill="url(#brandGrad)" />
         <path d="M13 12 L20 8 L27 12" stroke="url(#brandGrad)" strokeWidth="1" fill="none" opacity="0.6" />
-        {/* Verification check */}
-        <path
-          d="M12 21 L18 27 L28 15"
-          stroke="url(#brandGrad)"
-          strokeWidth="3"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          fill="none"
-          className="origin-center"
-          style={{
-            strokeDasharray: 24,
-            strokeDashoffset: 0,
-          }}
-        />
-        <circle
-          cx="20"
-          cy="20"
-          r="16"
-          stroke="url(#brandGrad)"
-          strokeWidth="0.5"
-          fill="none"
-          opacity="0.35"
-          strokeDasharray="2 4"
-          className="origin-center animate-[spin_18s_linear_infinite]"
-        />
+        <path d="M12 21 L18 27 L28 15" stroke="url(#brandGrad)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+        <circle cx="20" cy="20" r="16" stroke="url(#brandGrad)" strokeWidth="0.5" fill="none" opacity="0.35" strokeDasharray="2 4" className="origin-center animate-[spin_18s_linear_infinite]" />
       </svg>
     </div>
   );
 }
 
 /**
- * Left-panel illustration: a student under a tree with a laptop. Entirely
- * SVG/CSS/Framer Motion — no raster assets. Eyes, head tilt and laptop tilt
- * respond to pointer position; the password field toggles a "cover eyes"
- * pose via `handsUp`; `success` drives the smile + laptop glow + confetti
- * burst.
+ * Static hero illustration (frontend/public/login-hero.webp). Replaces the
+ * previous hand-built SVG scene entirely — no student/tree/props/animation
+ * primitives are drawn in code anymore. The only motion left here is a
+ * fade-in on mount, a gentle hover zoom, and a soft glow pulse on login
+ * success, all applied on top of the flat image.
  */
-function HeroIllustration({
-  handsUp,
-  success,
-}: {
-  handsUp: boolean;
-  success: boolean;
-}) {
-  const mx = useMotionValue(0);
-  const my = useMotionValue(0);
-  const pupilX = useTransform(mx, [-1, 1], [-2.5, 2.5]);
-  const pupilY = useTransform(my, [-1, 1], [-1.5, 1.5]);
-  const headRotate = useTransform(mx, [-1, 1], [-3, 3]);
-  const laptopRotate = useTransform(mx, [-1, 1], [2, -2]);
-
-  function onMouseMove(e: React.MouseEvent<HTMLDivElement>) {
-    const rect = e.currentTarget.getBoundingClientRect();
-    mx.set(((e.clientX - rect.left) / rect.width) * 2 - 1);
-    my.set(((e.clientY - rect.top) / rect.height) * 2 - 1);
-  }
-
+function HeroIllustration({ hovering, success }: { hovering: boolean; success: boolean }) {
   return (
-    <div className="relative h-full w-full overflow-hidden" onMouseMove={onMouseMove}>
-      <svg viewBox="0 0 480 640" className="h-full w-full" preserveAspectRatio="xMidYMax slice">
-        <defs>
-          <linearGradient id="skyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="#1e1147" />
-            <stop offset="100%" stopColor="#0b0c14" />
-          </linearGradient>
-          <linearGradient id="groundGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#1a2e35" />
-            <stop offset="100%" stopColor="#182042" />
-          </linearGradient>
-          <linearGradient id="canopyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#a855f7" />
-            <stop offset="50%" stopColor="#6366f1" />
-            <stop offset="100%" stopColor="#22d3ee" />
-          </linearGradient>
-          <linearGradient id="screenGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#6366f1" />
-            <stop offset="100%" stopColor="#22d3ee" />
-          </linearGradient>
-        </defs>
+    <div className="absolute inset-0 overflow-hidden">
+      <motion.img
+        src="/login-hero.webp"
+        alt="SmartAttend Hero"
+        className="absolute inset-0 h-full w-full object-cover object-center select-none pointer-events-none"
+        initial={{ opacity: 0, scale: 1.03 }}
+        animate={{ opacity: 1, scale: hovering ? 1.015 : 1 }}
+        transition={{ opacity: { duration: 1 }, scale: { duration: 0.8, ease: "easeOut" } }}
+        draggable={false}
+      />
 
-        <rect width="480" height="640" fill="url(#skyGrad)" />
+      {/* Dark purple tint so the image sits in the same palette as the page background */}
+      <div className="pointer-events-none absolute inset-0 bg-[#150c33]/35 mix-blend-multiply" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#0b0c14]/40 via-transparent to-[#0b0c14]/50" />
 
-        {/* Stars */}
-        {Array.from({ length: 18 }).map((_, i) => {
-          const sx = (i * 71 + 20) % 460 + 10;
-          const sy = (i * 53 + 15) % 220 + 10;
-          return (
-            <circle
-              key={i}
-              cx={sx}
-              cy={sy}
-              r={i % 3 === 0 ? 1.6 : 1}
-              fill="#ffffff"
-              opacity={0.5}
-              style={{
-                animation: `twinkle ${3 + (i % 4)}s ease-in-out ${i * 0.3}s infinite`,
-              }}
-            />
-          );
-        })}
+      {/* Edge fades so there's no hard vertical seam between the image and the card side */}
+      <div className="pointer-events-none absolute inset-y-0 right-0 w-40 bg-gradient-to-r from-transparent to-[#0b0c14]" />
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#0b0c14] to-transparent" />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#0b0c14] to-transparent" />
 
-        {/* Clouds */}
-        <g opacity="0.12" style={{ animation: "driftSlow 50s linear infinite" }}>
-          <ellipse cx="90" cy="90" rx="60" ry="18" fill="#ffffff" />
-          <ellipse cx="140" cy="80" rx="40" ry="14" fill="#ffffff" />
-        </g>
-        <g opacity="0.08" style={{ animation: "driftSlow 70s linear infinite reverse" }}>
-          <ellipse cx="360" cy="140" rx="70" ry="20" fill="#ffffff" />
-        </g>
-
-        {/* Ground */}
-        <path d="M0 560 Q240 500 480 560 L480 640 L0 640 Z" fill="url(#groundGrad)" />
-
-        {/* Tree */}
-        <g>
-          <path d="M235 560 L245 560 L248 400 L232 400 Z" fill="#3b2b52" />
-          <g
-            style={{
-              transformOrigin: "240px 380px",
-              animation: "sway 6s ease-in-out infinite",
-            }}
-          >
-            {[
-              [240, 300, 70],
-              [190, 340, 46],
-              [290, 340, 46],
-              [200, 280, 40],
-              [280, 280, 40],
-              [240, 250, 44],
-            ].map(([cx, cy, r], i) => (
-              <circle
-                key={i}
-                cx={cx}
-                cy={cy}
-                r={r}
-                fill="url(#canopyGrad)"
-                opacity={0.85}
-                style={{
-                  animation: `pulseSoft ${4 + i}s ease-in-out ${i * 0.4}s infinite`,
-                }}
-              />
-            ))}
-          </g>
-        </g>
-
-        {/* Floating attendance widgets */}
-        <g style={{ animation: "float 5s ease-in-out infinite" }}>
-          <rect x="330" y="200" width="92" height="34" rx="10" fill="#ffffff" fillOpacity="0.06" stroke="#ffffff" strokeOpacity="0.15" />
-          <circle cx="348" cy="217" r="6" fill="#34d399" />
-          <text x="362" y="221" fontSize="11" fill="#e5e7eb" fontFamily="Inter, sans-serif">98% present</text>
-        </g>
-        <g style={{ animation: "float 6s ease-in-out 0.8s infinite" }}>
-          <rect x="60" y="240" width="78" height="34" rx="10" fill="#ffffff" fillOpacity="0.06" stroke="#ffffff" strokeOpacity="0.15" />
-          <path d="M74 256 L82 264 L96 248" stroke="#22d3ee" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-          <text x="104" y="260" fontSize="11" fill="#e5e7eb" fontFamily="Inter, sans-serif">Verified</text>
-        </g>
-
-        {/* Student */}
-        <g style={{ transformOrigin: "240px 500px", animation: "breathe 4.5s ease-in-out infinite" }}>
-          {/* legs, crossed */}
-          <path d="M170 560 Q240 590 310 560 L300 575 Q240 600 180 575 Z" fill="#4338ca" />
-
-          {/* torso */}
-          <path d="M205 470 Q240 450 275 470 L280 545 Q240 560 200 545 Z" fill="#4f46e5" />
-
-          {/* head + face group, subtle tilt toward pointer */}
-          <motion.g style={{ rotate: headRotate, transformOrigin: "240px 430px" }}>
-            <circle cx="240" cy="430" r="34" fill="#fbcfa0" />
-            <path d="M208 420 Q240 392 272 420 Q272 400 240 398 Q208 400 208 420 Z" fill="#2e2140" />
-
-            {/* eyes (open state) */}
-            <g opacity={handsUp ? 0 : 1} style={{ transition: "opacity 0.25s ease" }}>
-              <g style={{ animation: "blink 5s ease-in-out infinite" }}>
-                <circle cx="228" cy="430" r="4.5" fill="#1f1530" />
-                <circle cx="252" cy="430" r="4.5" fill="#1f1530" />
-              </g>
-              <motion.circle cx="228" cy="430" r="1.8" fill="#ffffff" style={{ translateX: pupilX, translateY: pupilY }} />
-              <motion.circle cx="252" cy="430" r="1.8" fill="#ffffff" style={{ translateX: pupilX, translateY: pupilY }} />
-            </g>
-
-            {/* mouth: neutral or smiling on success */}
-            <path
-              d={success ? "M226 444 Q240 456 254 444" : "M228 446 Q240 450 252 446"}
-              stroke="#7c2d12"
-              strokeWidth="2.5"
-              fill="none"
-              strokeLinecap="round"
-              style={{ transition: "d 0.4s ease" }}
-            />
-          </motion.g>
-
-          {/* arm/hand that covers eyes while the password field is focused */}
-          <motion.g
-            animate={{ y: handsUp ? -78 : 0, rotate: handsUp ? -18 : 0 }}
-            transition={{ type: "spring", stiffness: 140, damping: 15 }}
-            style={{ transformOrigin: "215px 480px" }}
-          >
-            <path d="M215 480 Q195 460 214 428 Q222 420 232 426 Q216 448 226 470 Z" fill="#fbcfa0" />
-          </motion.g>
-
-          {/* laptop, gentle tilt toward pointer, glows on success */}
-          <motion.g style={{ rotate: laptopRotate, transformOrigin: "240px 545px" }}>
-            <rect x="205" y="530" width="70" height="46" rx="4" fill="#1e1b3a" stroke="#3730a3" />
-            <rect
-              x="209"
-              y="534"
-              width="62"
-              height="34"
-              rx="2"
-              fill="url(#screenGrad)"
-              opacity={success ? 1 : 0.55}
-              style={{
-                filter: success ? "drop-shadow(0 0 14px rgba(34,211,238,0.85))" : "none",
-                transition: "opacity 0.5s ease, filter 0.5s ease",
-              }}
-            />
-            <rect x="198" y="576" width="84" height="6" rx="2" fill="#312e81" />
-          </motion.g>
-        </g>
-
-        {/* success burst */}
-        <AnimatePresence>
-          {success && (
-            <motion.g
-              initial={{ opacity: 0, scale: 0.6 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0 }}
-              style={{ transformOrigin: "240px 545px" }}
-            >
-              {[0, 1, 2].map((i) => (
-                <motion.circle
-                  key={i}
-                  cx="240"
-                  cy="545"
-                  r="10"
-                  stroke="#22d3ee"
-                  strokeWidth="2"
-                  fill="none"
-                  initial={{ r: 10, opacity: 0.8 }}
-                  animate={{ r: 60 + i * 20, opacity: 0 }}
-                  transition={{ duration: 1.2, delay: i * 0.15, repeat: Infinity, repeatDelay: 0.4 }}
-                />
-              ))}
-            </motion.g>
-          )}
-        </AnimatePresence>
-      </svg>
-
-      <style>{`
-        @keyframes sway { 0%, 100% { transform: rotate(-1.2deg); } 50% { transform: rotate(1.2deg); } }
-        @keyframes pulseSoft { 0%, 100% { opacity: 0.75; } 50% { opacity: 0.95; } }
-        @keyframes breathe { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(1.012); } }
-        @keyframes blink { 0%, 92%, 100% { transform: scaleY(1); } 96% { transform: scaleY(0.08); } }
-        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-        @keyframes driftSlow { 0% { transform: translateX(-30px); } 100% { transform: translateX(30px); } }
-        @keyframes twinkle { 0%, 100% { opacity: 0.2; } 50% { opacity: 0.9; } }
-      `}</style>
+      {/* Soft success glow, layered above the image */}
+      <motion.div
+        className="pointer-events-none absolute inset-0"
+        style={{ background: "radial-gradient(circle at 45% 55%, rgba(139,92,246,0.35), transparent 60%)" }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: success ? 1 : 0 }}
+        transition={{ duration: 0.6 }}
+      />
     </div>
   );
 }
@@ -303,9 +83,12 @@ export function LoginPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // UI-only state for the illustration; does not affect auth flow.
+  // UI-only state driving the hero image and cosmetic form affordances.
+  // None of it is read by handleSubmit or sent anywhere.
   const [passwordFocused, setPasswordFocused] = useState(false);
+  const [illustrationHovered, setIllustrationHovered] = useState(false);
   const [loginSuccess, setLoginSuccess] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -324,13 +107,11 @@ export function LoginPage() {
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-[#0b0c14] font-sans">
-      {/* Animated gradient background */}
       <div className="pointer-events-none absolute inset-0">
-        <div className="absolute -top-40 -left-40 h-[32rem] w-[32rem] rounded-full bg-purple-600/30 blur-3xl animate-[pulse_8s_ease-in-out_infinite]" />
-        <div className="absolute top-1/3 -right-32 h-[28rem] w-[28rem] rounded-full bg-cyan-500/20 blur-3xl animate-[pulse_10s_ease-in-out_infinite]" />
-        <div className="absolute -bottom-40 left-1/4 h-[30rem] w-[30rem] rounded-full bg-indigo-600/25 blur-3xl animate-[pulse_12s_ease-in-out_infinite]" />
+        <div className="absolute -top-40 -left-40 h-[32rem] w-[32rem] rounded-full bg-[#7C3AED]/30 blur-3xl animate-[pulse_8s_ease-in-out_infinite]" />
+        <div className="absolute top-1/3 -right-32 h-[28rem] w-[28rem] rounded-full bg-[#06B6D4]/20 blur-3xl animate-[pulse_10s_ease-in-out_infinite]" />
+        <div className="absolute -bottom-40 left-1/4 h-[30rem] w-[30rem] rounded-full bg-[#8B5CF6]/25 blur-3xl animate-[pulse_12s_ease-in-out_infinite]" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(255,255,255,0.06),transparent_60%)]" />
-        {/* noise texture */}
         <svg className="absolute inset-0 h-full w-full opacity-[0.03] mix-blend-overlay">
           <filter id="noiseFilter">
             <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" stitchTiles="stitch" />
@@ -339,7 +120,6 @@ export function LoginPage() {
         </svg>
       </div>
 
-      {/* Brand mark */}
       <div className="absolute top-6 left-6 z-10 flex items-center gap-3 sm:top-8 sm:left-8">
         <BrandLogo />
         <div>
@@ -349,37 +129,34 @@ export function LoginPage() {
       </div>
 
       <div className="relative z-10 flex min-h-screen items-stretch">
-        {/* Left: illustration (45%) */}
-        <div className="relative hidden w-[45%] items-center justify-center lg:flex">
-          <HeroIllustration handsUp={passwordFocused} success={loginSuccess} />
+        {/* Desktop: 45% image. Tablet: image still shows, scaled via object-cover. Mobile: hidden entirely. */}
+        <div
+          className="relative hidden md:flex md:w-[45%]"
+          onMouseEnter={() => setIllustrationHovered(true)}
+          onMouseLeave={() => setIllustrationHovered(false)}
+        >
+          <HeroIllustration hovering={illustrationHovered} success={loginSuccess} />
         </div>
 
-        {/* Right: login card (55%) */}
-        <div className="flex w-full items-center justify-center px-4 py-10 lg:w-[55%]">
+        <div className="flex w-full items-center justify-center px-4 py-10 md:w-[55%]">
           <motion.div
             initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, ease: "easeOut" }}
+            animate={{ opacity: 1, y: [0, -4, 0] }}
+            transition={{ opacity: { duration: 0.5 }, y: { duration: 6, repeat: Infinity, ease: "easeInOut" } }}
             className="relative w-full max-w-md"
           >
-            <div className="pointer-events-none absolute -inset-px rounded-2xl bg-gradient-to-br from-purple-500/40 via-indigo-500/30 to-cyan-400/40 opacity-0 blur transition-opacity duration-700 hover:opacity-60" />
-            <div className="relative rounded-2xl border border-white/10 bg-white/[0.06] p-8 shadow-[0_8px_40px_rgba(0,0,0,0.45)] backdrop-blur-2xl transition-shadow duration-500 hover:shadow-[0_8px_50px_rgba(99,102,241,0.25)] sm:p-10">
+            <div className="pointer-events-none absolute -inset-px rounded-2xl bg-gradient-to-br from-[#7C3AED]/50 via-[#8B5CF6]/30 to-[#06B6D4]/50 opacity-40 blur transition-opacity duration-700 hover:opacity-70" />
+            <div className="relative rounded-2xl border border-white/10 bg-white/[0.06] p-8 shadow-[0_20px_70px_rgba(0,0,0,0.55)] backdrop-blur-2xl transition-shadow duration-500 hover:shadow-[0_20px_80px_rgba(139,92,246,0.3)] sm:p-10">
               <div className="mb-8 text-center">
                 <h1 className="font-display text-2xl font-semibold text-white sm:text-3xl">Welcome back</h1>
                 <p className="mt-2 text-sm text-white/50">Sign in to your SmartAttend account to continue.</p>
               </div>
 
-              <form onSubmit={handleSubmit} noValidate className="space-y-5">
+              <form onSubmit={handleSubmit} noValidate className="space-y-4">
                 <div>
-                  <label htmlFor="email" className="mb-2 block text-xs font-semibold text-white/60">
-                    Email
-                  </label>
+                  <label htmlFor="email" className="sr-only">Email</label>
                   <div className="relative">
-                    <Mail
-                      className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-white/40"
-                      size={18}
-                      aria-hidden="true"
-                    />
+                    <Mail className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-white/40" size={18} aria-hidden="true" />
                     <input
                       id="email"
                       name="email"
@@ -387,8 +164,8 @@ export function LoginPage() {
                       autoComplete="email"
                       required
                       aria-required="true"
-                      className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-12 pr-4 text-sm text-white placeholder-white/30 outline-none transition focus:border-indigo-400/60 focus:bg-white/10 focus:ring-2 focus:ring-indigo-400/30"
-                      placeholder="you@smartattend.dev"
+                      className="w-full rounded-xl border border-white/10 bg-white/5 py-3.5 pl-12 pr-4 text-sm text-white placeholder-white/35 outline-none transition focus:border-[#8B5CF6]/60 focus:bg-white/10 focus:shadow-[0_0_0_4px_rgba(139,92,246,0.15)]"
+                      placeholder="Email address"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                     />
@@ -396,15 +173,9 @@ export function LoginPage() {
                 </div>
 
                 <div>
-                  <label htmlFor="password" className="mb-2 block text-xs font-semibold text-white/60">
-                    Password
-                  </label>
+                  <label htmlFor="password" className="sr-only">Password</label>
                   <div className="relative">
-                    <Lock
-                      className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-white/40"
-                      size={18}
-                      aria-hidden="true"
-                    />
+                    <Lock className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-white/40" size={18} aria-hidden="true" />
                     <input
                       id="password"
                       name="password"
@@ -414,8 +185,8 @@ export function LoginPage() {
                       aria-required="true"
                       onFocus={() => setPasswordFocused(true)}
                       onBlur={() => setPasswordFocused(false)}
-                      className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-12 pr-12 text-sm text-white placeholder-white/30 outline-none transition focus:border-indigo-400/60 focus:bg-white/10 focus:ring-2 focus:ring-indigo-400/30"
-                      placeholder="••••••••"
+                      className="w-full rounded-xl border border-white/10 bg-white/5 py-3.5 pl-12 pr-12 text-sm text-white placeholder-white/35 outline-none transition focus:border-[#8B5CF6]/60 focus:bg-white/10 focus:shadow-[0_0_0_4px_rgba(139,92,246,0.15)]"
+                      placeholder="Password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                     />
@@ -431,11 +202,24 @@ export function LoginPage() {
                   </div>
                 </div>
 
+                {/* Cosmetic only: not wired to auth state or any request. */}
+                <div className="flex items-center justify-between pt-1 text-xs">
+                  <label className="flex items-center gap-2 text-white/50">
+                    <input
+                      type="checkbox"
+                      checked={rememberMe}
+                      onChange={(e) => setRememberMe(e.target.checked)}
+                      className="h-3.5 w-3.5 rounded border-white/20 bg-white/10 accent-[#8B5CF6]"
+                    />
+                    Remember me
+                  </label>
+                  <button type="button" className="text-[#a5b4fc] underline-offset-2 transition-colors hover:text-white hover:underline">
+                    Forgot password?
+                  </button>
+                </div>
+
                 {error && (
-                  <div
-                    role="alert"
-                    className="rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-300"
-                  >
+                  <div role="alert" className="rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-300">
                     {error}
                   </div>
                 )}
@@ -445,31 +229,26 @@ export function LoginPage() {
                   disabled={loading}
                   whileHover={{ scale: loading ? 1 : 1.01 }}
                   whileTap={{ scale: loading ? 1 : 0.98 }}
-                  className="group relative flex w-full items-center justify-center gap-2 overflow-hidden rounded-xl bg-gradient-to-r from-purple-500 via-indigo-500 to-cyan-400 py-3 text-sm font-semibold text-[#0b0c14] transition disabled:cursor-not-allowed disabled:opacity-50"
+                  className="group relative flex w-full items-center justify-center gap-2 overflow-hidden rounded-xl bg-gradient-to-r from-[#7C3AED] via-[#8B5CF6] to-[#06B6D4] py-3.5 text-sm font-semibold text-white shadow-[0_10px_30px_rgba(139,92,246,0.35)] transition disabled:cursor-not-allowed disabled:opacity-50"
                 >
-                  {loading ? (
-                    "Signing in…"
-                  ) : (
+                  <span className="pointer-events-none absolute inset-0 -translate-x-full bg-white/20 blur-md transition-transform duration-700 group-hover:translate-x-full" />
+                  {loading ? "Signing in…" : (
                     <>
-                      Sign in
+                      Login
                       <ArrowRight size={16} className="transition-transform group-hover:translate-x-0.5" />
                     </>
                   )}
                 </motion.button>
               </form>
 
-              <div className="mt-8 border-t border-white/10 pt-5 text-xs text-white/40">
-                <p className="mb-1 font-semibold text-white/60">Demo accounts (password: password123)</p>
-                <p>admin@smartattend.dev · faculty@smartattend.dev · student1@smartattend.dev</p>
-              </div>
+              {/* Cosmetic only: no route wired up yet. */}
+              <p className="mt-6 text-center text-xs text-white/40">
+                Don't have an account?{" "}
+                <button type="button" className="font-medium text-[#a5b4fc] transition-colors hover:text-white">Sign up</button>
+              </p>
 
-              <div className="mt-6 flex items-center justify-center gap-4 text-[11px] text-white/25">
-                <span className="flex items-center gap-1">
-                  <Sparkles size={12} /> AI-verified
-                </span>
-                <span className="flex items-center gap-1">
-                  <BarChart3 size={12} /> Real-time insights
-                </span>
+              <div className="mt-7 border-t border-white/10 pt-4 text-center text-[11px] text-white/30">
+                Demo: admin@smartattend.dev · faculty@smartattend.dev · student1@smartattend.dev (password123)
               </div>
             </div>
           </motion.div>
