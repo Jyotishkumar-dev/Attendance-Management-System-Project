@@ -3,7 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { Mail, Lock, Eye, EyeOff, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { useAuth } from "../context/AuthContext";
-
+<h1 className="text-red-500 text-5xl">
+HELLO SMARTATTEND
+</h1>
 /**
  * SmartAttend brand mark — custom SVG, not a Lucide icon.
  * Kept as the checkmark/AI-node mark (rather than a graduation cap) per the
