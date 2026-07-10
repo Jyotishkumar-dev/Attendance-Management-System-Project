@@ -1,3 +1,4 @@
+import { StudentProfilePage } from "./pages/StudentProfilePage";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "./context/AuthContext";
@@ -10,6 +11,7 @@ import { StudentsPage } from "./pages/StudentsPage";
 import { FacultyPage } from "./pages/FacultyPage";
 import { SubjectsPage } from "./pages/SubjectsPage";
 import { DepartmentsPage } from "./pages/DepartmentsPage";
+
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { retry: 1, refetchOnWindowFocus: false } },
@@ -46,6 +48,15 @@ export default function App() {
                   </ProtectedRoute>
                 }
               />
+              
+              <Route
+                path="/student/profile"
+                element={
+                  <ProtectedRoute roles={["STUDENT"]}>
+                    <StudentProfilePage />
+                  </ProtectedRoute>
+               }
+              />
               <Route
                 path="/faculty"
                 element={
@@ -54,6 +65,7 @@ export default function App() {
                   </ProtectedRoute>
                 }
               />
+              
               <Route
                 path="/subjects"
                 element={
