@@ -1,3 +1,7 @@
+import { HodProfilePage } from "./pages/HodProfilePage";
+import { HodStudentsPage } from "./pages/HodStudentsPage";
+import { HodFacultyPage } from "./pages/HodFacultyPage";
+import { HodSubjectsPage } from "./pages/HodSubjectsPage";
 import { FacultyProfilePage } from "./pages/FacultyProfilePage";
 import { StudentProfilePage } from "./pages/StudentProfilePage";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -58,6 +62,41 @@ export default function App() {
                   </ProtectedRoute>
                }
               />
+              <Route
+                path="/hod/profile"
+                element={
+                  <ProtectedRoute roles={["HOD"]}>
+                   <HodProfilePage />
+                  </ProtectedRoute>
+               }
+              />
+
+              <Route
+               path="/hod/students"
+                element={
+                 <ProtectedRoute roles={["HOD"]}>
+                  <HodStudentsPage />
+                 </ProtectedRoute>
+                }
+              />
+
+              <Route
+                path="/hod/faculty"
+                element={
+                 <ProtectedRoute roles={["HOD"]}>
+                  <HodFacultyPage />
+                 </ProtectedRoute>
+                }
+              />
+
+              <Route
+               path="/hod/subjects"
+               element={
+                <ProtectedRoute roles={["HOD"]}>
+                 <HodSubjectsPage />
+                </ProtectedRoute>
+               }
+             />
               <Route
                 path="/faculty"
                 element={

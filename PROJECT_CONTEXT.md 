@@ -1,0 +1,207 @@
+# SmartAttend - Project Context
+
+## Project Overview
+
+SmartAttend is a Full Stack Attendance Management System.
+
+The project is built using:
+
+- Frontend: React + TypeScript + Vite + Tailwind CSS
+- Backend: Node.js + Express + TypeScript
+- Database: PostgreSQL
+- ORM: Prisma
+- Authentication: JWT
+- State Management: React Query + Context API
+- Deployment:
+  - Frontend → Vercel
+  - Backend → (Pending)
+
+---
+
+# Project Structure
+
+```
+SmartAttend
+
+frontend/
+src/
+components/
+pages/
+hooks/
+context/
+services/
+types/
+
+backend/
+src/
+controllers/
+routes/
+middlewares/
+services/
+prisma/
+```
+
+---
+
+# User Roles
+
+## Student
+
+Features
+
+- Login
+- Dashboard
+- View attendance
+- View profile
+
+Status
+
+✅ Completed
+
+---
+
+## Faculty
+
+Features
+
+- Login
+- Dashboard
+- Mark Attendance
+- View Students
+
+Status
+
+✅ Completed
+
+---
+
+## HOD
+
+Features
+
+- Dashboard
+- Department Analytics
+- Faculty Management
+- Student Overview
+
+Status
+
+🚧 In Progress
+
+---
+
+## Admin
+
+Features
+
+- Dashboard
+- Manage Departments
+- Manage Users
+
+Status
+
+✅ Completed
+
+---
+
+# Completed Modules
+
+- JWT Authentication
+- Login
+- Role Based Routing
+- Protected Routes
+- Student Dashboard
+- Faculty Dashboard
+- Admin Dashboard
+- Attendance Module
+
+---
+
+# Pending Modules
+
+- HOD Dashboard
+- Reports
+- Notifications
+- Export PDF
+- Export Excel
+- Deployment
+- Unit Testing
+
+---
+
+# Database
+
+Database
+
+PostgreSQL
+
+ORM
+
+Prisma
+
+Important Models
+
+- User
+- Student
+- Faculty
+- Attendance
+- Department
+- Subject
+
+---
+
+# API Rules
+
+- Existing APIs should NOT be changed unless absolutely necessary.
+- Keep backward compatibility.
+
+---
+
+# UI Rules
+
+- Keep existing design.
+- Tailwind CSS only.
+- No unnecessary redesign.
+- Responsive UI.
+
+---
+
+# Coding Rules
+
+- TypeScript Strict Mode
+- Production Ready Code
+- Reusable Components
+- Clean Folder Structure
+- File-wise changes only
+
+---
+
+# Current Goal
+
+Fix all remaining TypeScript errors.
+
+After TypeScript:
+
+1. Complete HOD Dashboard
+
+2. Optimize Code
+
+3. Deployment
+
+4. Final Testing
+
+---
+
+# Important
+
+Never break existing functionality.
+
+Always provide
+
+- File Name
+- Exact Code Changes
+- Explanation
+
+Never rewrite the whole project.
+
+Only modify required files.

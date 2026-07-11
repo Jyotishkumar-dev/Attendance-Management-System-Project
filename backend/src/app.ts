@@ -1,3 +1,4 @@
+import hodRoutes from "./routes/hod";
 import express from "express";
 import cors from "cors";
 import helmet from "helmet";
@@ -16,7 +17,6 @@ import attendanceRoutes from "./routes/attendance";
 import { errorHandler, notFound } from "./middleware/errorHandler";
 
 const app = express();
-
 app.use(helmet());
 app.use(
   cors({
@@ -39,13 +39,14 @@ app.use("/api", limiter);
 
 app.get("/health", (_req, res) => res.json({ status: "ok" }));
 
+
 app.use("/api/auth", authRoutes);
 app.use("/api/departments", departmentRoutes);
 app.use("/api/subjects", subjectRoutes);
 app.use("/api/students", studentRoutes);
 app.use("/api/faculty", facultyRoutes);
 app.use("/api/attendance", attendanceRoutes);
-
+app.use("/api/hod", hodRoutes);
 app.use(notFound);
 app.use(errorHandler);
 

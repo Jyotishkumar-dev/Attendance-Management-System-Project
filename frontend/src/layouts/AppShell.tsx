@@ -26,10 +26,11 @@ const NAV: Record<string, NavItem[]> = {
     { to: "/mark-attendance", label: "Mark Attendance", icon: CalendarCheck },
   ],
   HOD: [
-    { to: "/", label: "Dashboard", icon: LayoutDashboard },
-    { to: "/students", label: "Students", icon: Users },
-    { to: "/subjects", label: "Subjects", icon: BookOpen },
-  ],
+  { to: "/", label: "Dashboard", icon: LayoutDashboard },
+  { to: "/hod/students", label: "Students", icon: Users },
+  { to: "/hod/faculty", label: "Faculty", icon: Users },
+  { to: "/hod/subjects", label: "Subjects", icon: BookOpen },
+ ],
   ADMIN: [
     { to: "/", label: "Dashboard", icon: LayoutDashboard },
     { to: "/students", label: "Students", icon: Users },
@@ -229,10 +230,13 @@ export function AppShell() {
                      setProfileOpen(false);
 
                      if (user?.role === "STUDENT") {
-                       navigate("/student/profile");
-                      } else if (user?.role === "FACULTY") {
+                         navigate("/student/profile");
+                     } else if (user?.role === "FACULTY") {
                         navigate("/faculty/profile");
-                      }
+                     } else if (user?.role === "HOD") {
+                       navigate("/hod/profile");
+                    }
+                    
                     }}
                     className="flex items-center gap-2.5 w-full px-4 py-2.5 text-sm text-white/70 hover:bg-white/5 hover:text-white transition-colors"
                   >
