@@ -116,4 +116,31 @@ router.delete(
   }
 );
 
+// Get own faculty profile
+router.get(
+  "/me",
+  authenticate,
+  authorize("FACULTY"),
+  async (req: AuthRequest, res, next) => {
+    try {
+      const row = await db.query.faculty.findFirst({
+        where: eq(faculty.userId, req.user!.userId),
+        with: {
+          user: true,
+          department: true,
+          subjects: true,
+        },
+      });
+
+      if (!row) {
+        throw new AppError("Faculty profile not found", 404);
+      }
+
+      res.json(row);
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
 export default router;
