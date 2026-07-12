@@ -56,7 +56,18 @@ export function HodProfilePage() {
     isFetching,
   } = useQuery<HodProfile>({
     queryKey: ["hod-profile"],
-    queryFn: async () => (await api.get("/hod/me")).data,
+    queryFn: async () => {
+      try {
+        const res = await api.get("/hod/me");
+        console.log("SUCCESS", res.data);
+        return res.data;
+      } catch (err: any) {
+        console.log("ERROR");
+        console.log(err.response?.status);
+        console.log(err.response?.data);
+        throw err;
+  }
+},
   });
 
   if (isLoading) return <ProfileSkeleton />;
