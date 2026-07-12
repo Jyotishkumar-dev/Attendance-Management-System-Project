@@ -1,7 +1,4 @@
-import { StudentDashboard } from "./StudentDashboard";
-import { FacultyDashboard } from "./FacultyDashboard";
-import { HodDashboardPage } from "./HodDashboardP";
-import { AdminDashboard } from "./AdminDashboard";
+
 import type { ReactNode } from "react";
 import {
   Users,

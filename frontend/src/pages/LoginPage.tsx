@@ -87,7 +87,7 @@ export function LoginPage() {
 
   // UI-only state driving the hero image and cosmetic form affordances.
   // None of it is read by handleSubmit or sent anywhere.
-  const [passwordFocused, setPasswordFocused] = useState(false);
+  const [, setPasswordFocused] = useState(false);
   const [illustrationHovered, setIllustrationHovered] = useState(false);
   const [loginSuccess, setLoginSuccess] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);

@@ -90,7 +90,7 @@ export function HodFacultyPage() {
   const avgSubjects = totalCount === 0 ? 0 : faculty.reduce((sum, f) => sum + f.subjectsAssigned, 0) / totalCount;
 
   const hasAnyFaculty = totalCount > 0;
-  const hasFilters = search !== "" || designation !== "all" || status !== "all";
+  
 
   function handleDelete(id: string) {
     setFaculty((prev) => prev.filter((f) => f.id !== id));
