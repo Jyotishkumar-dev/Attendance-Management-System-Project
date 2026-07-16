@@ -1,0 +1,105 @@
+/* =========================
+   MAIN BACKGROUND
+========================= */
+
+.login-background {
+  position: fixed;
+  inset: 0;
+
+  background:
+    radial-gradient(circle at top left, rgba(130, 40, 255, .22), transparent 40%),
+    radial-gradient(circle at bottom right, rgba(0, 200, 255, .15), transparent 40%),
+    linear-gradient(135deg,#050816,#0b1020,#09061b);
+
+  z-index: -4;
+}
+
+/* =========================
+      GRID
+========================= */
+
+.login-grid{
+
+position:fixed;
+
+inset:0;
+
+background-image:
+
+linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),
+
+linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);
+
+background-size:60px 60px;
+
+z-index:-3;
+
+}
+
+/* =========================
+    CENTER DIVIDER
+========================= */
+
+.login-divider{
+
+position:fixed;
+
+left:50%;
+
+top:0;
+
+width:1px;
+
+height:100vh;
+
+background:linear-gradient(
+
+to bottom,
+
+transparent,
+
+rgba(126,87,255,.9),
+
+transparent
+
+);
+
+transform:translateX(-50%);
+
+z-index:-2;
+
+}
+
+/* =========================
+      GLOW ORB
+========================= */
+
+.login-orb{
+
+position:fixed;
+
+left:50%;
+
+top:50%;
+
+width:18px;
+
+height:18px;
+
+border-radius:50%;
+
+transform:translate(-50%,-50%);
+
+background:#8a5cff;
+
+box-shadow:
+
+0 0 20px #8a5cff,
+
+0 0 40px #8a5cff,
+
+0 0 80px #8a5cff;
+
+z-index:-1;
+
+}
