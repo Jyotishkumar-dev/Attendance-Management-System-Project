@@ -41,6 +41,10 @@ I ran the actual server, pushed the schema to a live Postgres instance, seeded i
 end-to-end (login → mark attendance → student summary → admin analytics) before handing this over —
 it isn't just generated code, it runs.
 
+## Test
+
+This README was updated from VS Code.
+
 ## What's not built yet (from your original spec)
 
 Timetable module · Leave management · Notifications (in-app/email/push) · Reports export
