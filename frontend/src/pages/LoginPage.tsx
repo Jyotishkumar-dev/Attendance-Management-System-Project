@@ -114,7 +114,7 @@ const GradientText = memo(function GradientText({
   const reduceMotion = Boolean(useReducedMotion());
   return (
     <motion.span
-      className={`bg-gradient-to-r from-[#a78bfa] via-[#c4b5fd] to-[#67e8f9] bg-clip-text text-transparent ${className}`}
+      className={`bg-gradient-to-r from-[#a855f7] via-[#8b5cf6] to-[#22d3ee] bg-clip-text text-transparent ${className}`}
       style={{ backgroundSize: "200% auto", ...style }}
       animate={
         reduceMotion
@@ -311,57 +311,121 @@ const FeatureCard = memo(function FeatureCard({
     <motion.div
       variants={fadeUp}
       transition={{ duration: 0.5 }}
-      whileHover={{ y: -4, borderColor: "rgba(139,92,246,0.45)" }}
-      className="group flex items-start gap-4 rounded-2xl border border-white/10 bg-white/[0.04] p-5 backdrop-blur-sm transition-colors duration-300"
+      whileHover={{
+        y: -5,
+        borderColor: "rgba(139,92,246,0.5)",
+        boxShadow: "0 16px 40px -12px rgba(139,92,246,0.35)",
+      }}
+      className="group relative flex items-start gap-4 overflow-hidden rounded-2xl border border-white/10 bg-white/[0.045] p-6 backdrop-blur-md transition-colors duration-300"
     >
       <motion.span
-        className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-gradient-to-br from-[#7C3AED]/20 to-[#06B6D4]/20 text-[#a5b4fc]"
+        className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-gradient-to-br from-[#7C3AED]/25 to-[#06B6D4]/25 text-[#a5b4fc] transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3"
         animate={reduceMotion ? undefined : { y: [0, -5, 0] }}
         transition={reduceMotion ? undefined : { duration: 4 + index * 0.4, repeat: Infinity, ease: "easeInOut", delay: index * 0.3 }}
       >
-        <Icon size={20} aria-hidden="true" />
+        <Icon size={21} aria-hidden="true" />
       </motion.span>
-      <div>
+      <div className="min-w-0 flex-1">
         <h3 className="text-sm font-semibold text-white">{title}</h3>
-        <p className="mt-1 text-sm leading-relaxed text-white/50">{description}</p>
+        <p className="mt-1.5 text-sm leading-relaxed text-white/50">{description}</p>
       </div>
+      <ArrowRight
+        size={16}
+        aria-hidden="true"
+        className="mt-1 shrink-0 -translate-x-2 text-[#a5b4fc] opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100"
+      />
     </motion.div>
   );
 });
 
+/**
+ * Extra depth layered behind the left panel's content only. The shared
+ * AmbientBackground already covers the whole page — this adds panel-local
+ * richness (a drifting gradient blob, a localized aurora blob, and a bottom
+ * mesh wave) without duplicating or fighting the page-wide layer. Kept to
+ * transform/opacity animations throughout to stay GPU-cheap.
+ */
+function LeftPanelDepth({ reduceMotion }: { reduceMotion: boolean }) {
+  return (
+    <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+      <motion.div
+        className="absolute left-1/3 top-1/4 h-72 w-72 rounded-full bg-[#8B5CF6]/20 blur-3xl"
+        animate={
+          reduceMotion
+            ? { opacity: 0.4 }
+            : { x: [0, 40, -20, 0], y: [0, -30, 15, 0], opacity: [0.25, 0.45, 0.3, 0.25] }
+        }
+        transition={reduceMotion ? undefined : { duration: 18, repeat: Infinity, ease: "easeInOut" }}
+      />
+      <motion.div
+        className="absolute -left-16 bottom-1/4 h-64 w-64 rounded-full bg-[#06B6D4]/15 blur-3xl"
+        animate={reduceMotion ? { opacity: 0.4 } : { opacity: [0.25, 0.5, 0.25], scale: [1, 1.08, 1] }}
+        transition={reduceMotion ? undefined : { duration: 10, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}
+      />
+
+      <svg
+        className="absolute inset-x-0 bottom-0 h-40 w-full"
+        viewBox="0 0 400 120"
+        preserveAspectRatio="none"
+      >
+        <defs>
+          <linearGradient id="meshWaveGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="#7C3AED" stopOpacity="0.18" />
+            <stop offset="50%" stopColor="#8B5CF6" stopOpacity="0.14" />
+            <stop offset="100%" stopColor="#06B6D4" stopOpacity="0.18" />
+          </linearGradient>
+        </defs>
+        <motion.path
+          d="M0,70 C100,20 300,110 400,55 L400,120 L0,120 Z"
+          fill="url(#meshWaveGrad)"
+          animate={reduceMotion ? undefined : { y: [0, 6, 0] }}
+          transition={reduceMotion ? undefined : { duration: 8, repeat: Infinity, ease: "easeInOut" }}
+        />
+      </svg>
+    </div>
+  );
+}
+
 function LeftPanel({ reduceMotion }: { reduceMotion: boolean }) {
   return (
-    <motion.div
-      variants={staggerContainer}
-      initial="hidden"
-      animate="show"
-      className="relative z-10 hidden h-full flex-col justify-center px-12 xl:flex xl:px-16"
-    >
-      <motion.div variants={fadeUp} transition={{ duration: 0.6 }} className="flex items-center gap-4">
-        <BrandLogo size={48} reduceMotion={reduceMotion} />
-        <GradientText className="text-3xl font-bold tracking-tight" style={{ fontFamily: SORA_FONT }} durationSec={7}>
-          SMARTATTEND
-        </GradientText>
-      </motion.div>
+    <div className="relative hidden h-full flex-col px-14 pt-32 xl:flex xl:px-20">
+      <LeftPanelDepth reduceMotion={reduceMotion} />
 
-      <motion.h1
-        variants={fadeUp}
-        transition={{ duration: 0.6 }}
-        className="mt-8 max-w-md text-4xl font-semibold leading-tight text-white"
-        style={{ fontFamily: SORA_FONT }}
+      {/*
+        No repeated logo/wordmark here — the corner lockup already carries
+        brand identity, and duplicating it as the first item in this
+        vertically-centered block was what caused it to visually collide
+        with the fixed corner lockup on shorter viewports. pt-32 above also
+        guarantees clearance regardless of content height.
+      */}
+      <motion.div
+        variants={staggerContainer}
+        initial="hidden"
+        animate="show"
+        className="relative z-10 flex flex-1 flex-col justify-center"
       >
-        Welcome to SmartAttend
-      </motion.h1>
-      <motion.p variants={fadeUp} transition={{ duration: 0.6 }} className="mt-3 max-w-sm text-base text-white/50">
-        AI Powered Attendance Management Platform
-      </motion.p>
+        <motion.h1
+          variants={fadeUp}
+          transition={{ duration: 0.6 }}
+          className="max-w-lg text-6xl font-bold leading-[1.05] tracking-tight text-white"
+          style={{ fontFamily: SORA_FONT }}
+        >
+          Welcome to{" "}
+          <GradientText durationSec={7} style={{ fontFamily: SORA_FONT }}>
+            SmartAttend
+          </GradientText>
+        </motion.h1>
+        <motion.p variants={fadeUp} transition={{ duration: 0.6 }} className="mt-5 max-w-sm text-lg text-white/50">
+          AI Powered Attendance Management Platform
+        </motion.p>
 
-      <div className="mt-10 grid max-w-lg gap-4">
-        {FEATURES.map((feature, index) => (
-          <FeatureCard key={feature.title} {...feature} index={index} reduceMotion={reduceMotion} />
-        ))}
-      </div>
-    </motion.div>
+        <div className="mt-12 grid max-w-lg gap-5">
+          {FEATURES.map((feature, index) => (
+            <FeatureCard key={feature.title} {...feature} index={index} reduceMotion={reduceMotion} />
+          ))}
+        </div>
+      </motion.div>
+    </div>
   );
 }
 
@@ -424,12 +488,12 @@ const FloatingLabelInput = memo(function FloatingLabelInput({
   return (
     <div className="relative">
       <div
-        className={`relative rounded-xl border bg-white/5 transition-all duration-300 ${
+        className={`relative rounded-xl border shadow-inner shadow-black/20 backdrop-blur-md transition-all duration-300 ${
           invalid
-            ? "border-red-400/60 bg-red-500/[0.04]"
+            ? "border-red-400/60 bg-red-500/[0.06]"
             : focused
-              ? "border-[#8B5CF6]/70 bg-white/10 shadow-[0_0_0_4px_rgba(139,92,246,0.16)]"
-              : "border-white/10"
+              ? "border-[#8B5CF6]/70 bg-black/30 shadow-[0_0_0_4px_rgba(139,92,246,0.16)]"
+              : "border-white/10 bg-black/20"
         }`}
       >
         <Icon
@@ -576,20 +640,39 @@ export function LoginPage() {
   }
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-[#0b0c14] font-sans" onPointerMove={onPageMove}>
+    <div
+      className="smartattend-login relative min-h-screen overflow-hidden bg-[#0b0c14] font-sans"
+      onPointerMove={onPageMove}
+    >
+      {/* Scoped so it never leaks into other pages sharing this SPA document. */}
+      <style>{`
+        .smartattend-login input:-webkit-autofill,
+        .smartattend-login input:-webkit-autofill:hover,
+        .smartattend-login input:-webkit-autofill:focus {
+          -webkit-text-fill-color: #fff;
+          -webkit-box-shadow: 0 0 0px 1000px rgba(10, 11, 18, 0.92) inset;
+          box-shadow: 0 0 0px 1000px rgba(10, 11, 18, 0.92) inset;
+          caret-color: #fff;
+          transition: background-color 9999s ease-in-out 0s;
+        }
+      `}</style>
+
       <AmbientBackground reduceMotion={reduceMotion} glowX={glowX} glowY={glowY} />
 
-      <div className="absolute top-6 left-6 z-20 flex items-center gap-3 sm:top-8 sm:left-8">
+      <div className="absolute top-6 left-6 z-20 flex items-center gap-3.5 sm:top-8 sm:left-8">
         <BrandLogo size={34} reduceMotion={reduceMotion} />
-        <div>
-          <GradientText className="block text-base font-bold tracking-tight" style={{ fontFamily: SORA_FONT }}>
+        <div className="flex flex-col justify-center whitespace-nowrap">
+          <GradientText
+            className="block text-base font-bold leading-none tracking-tight"
+            style={{ fontFamily: SORA_FONT }}
+          >
             SMARTATTEND
           </GradientText>
           <motion.span
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3, duration: 0.6 }}
-            className="block text-[11px] tracking-wide text-white/40"
+            className="mt-1 block text-[11px] leading-none tracking-wide text-white/40"
           >
             AI Powered Attendance Platform
           </motion.span>
@@ -600,37 +683,40 @@ export function LoginPage() {
         <LeftPanel reduceMotion={reduceMotion} />
         <CenterDivider reduceMotion={reduceMotion} />
 
-        <div className="flex w-full items-center justify-center px-4 py-10 xl:w-[46%] xl:px-12">
+        <div className="flex w-full flex-col items-center justify-center px-4 py-10 xl:w-[46%] xl:px-12">
           <motion.div
             initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: reduceMotion ? 0 : [0, -6, 0] }}
+            animate={{ opacity: 1, y: reduceMotion ? 0 : [0, -8, 0] }}
             transition={{
               opacity: { duration: 0.5 },
-              y: reduceMotion ? { duration: 0 } : { duration: 8, repeat: Infinity, ease: "easeInOut" },
+              y: reduceMotion ? { duration: 0 } : { duration: 7, repeat: Infinity, ease: "easeInOut" },
             }}
             className="relative w-full max-w-md"
             style={{ perspective: 1200 }}
             onPointerMove={onCardMove}
             onPointerLeave={handleCardPointerLeave}
           >
-            <div className="pointer-events-none absolute -inset-px rounded-2xl bg-gradient-to-br from-[#7C3AED]/50 via-[#8B5CF6]/30 to-[#06B6D4]/50 opacity-40 blur transition-opacity duration-700 hover:opacity-70" />
+            {/* Ambient halo — soft, wide glow behind the card */}
+            <div className="pointer-events-none absolute -inset-4 rounded-[28px] bg-gradient-to-br from-[#7C3AED]/40 via-[#8B5CF6]/25 to-[#06B6D4]/40 opacity-50 blur-2xl transition-opacity duration-700 hover:opacity-80" />
 
+            {/* Crisp 1.5px gradient border via the padding-box technique, tilts with the pointer */}
             <motion.div
               style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
-              className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.06] p-8 shadow-[0_20px_70px_rgba(0,0,0,0.55)] backdrop-blur-2xl transition-shadow duration-500 hover:shadow-[0_20px_80px_rgba(139,92,246,0.3)] sm:p-10"
+              className="relative rounded-2xl bg-gradient-to-br from-[#7C3AED] via-[#8B5CF6] to-[#06B6D4] p-[1.5px] shadow-[0_25px_90px_rgba(0,0,0,0.6)]"
             >
-              {/* Reflection sweep — one-shot on hover, not a continuous loop */}
-              <div className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/[0.05] to-transparent transition-transform duration-1000 hover:translate-x-full" />
+              <div className="relative overflow-hidden rounded-[15px] bg-[#0d0e17]/85 p-10 backdrop-blur-3xl transition-shadow duration-500 hover:shadow-[0_20px_90px_rgba(139,92,246,0.35)] sm:p-12">
+                {/* Reflection sweep — one-shot on hover, not a continuous loop */}
+                <div className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/[0.06] to-transparent transition-transform duration-1000 hover:translate-x-full" />
 
-              <div className="mb-8 text-center">
-                <h1 className="text-2xl font-semibold text-white sm:text-3xl" style={{ fontFamily: SORA_FONT }}>
-                  Welcome back
-                </h1>
-                <p className="mt-2 text-sm text-white/50">Sign in to your SmartAttend account to continue.</p>
-              </div>
+                <div className="mb-10 text-center">
+                  <h1 className="text-2xl font-semibold text-white sm:text-3xl" style={{ fontFamily: SORA_FONT }}>
+                    Welcome back
+                  </h1>
+                  <p className="mt-2.5 text-sm text-white/50">Sign in to your SmartAttend account to continue.</p>
+                </div>
 
-              <form onSubmit={handleSubmit} noValidate className="space-y-5">
-                <motion.div animate={formShakeControls} className="space-y-5">
+                <form onSubmit={handleSubmit} noValidate className="space-y-6">
+                  <motion.div animate={formShakeControls} className="space-y-6">
                   <FloatingLabelInput
                     id="email"
                     label="Email address"
@@ -723,8 +809,10 @@ export function LoginPage() {
                   onPointerDown={handleButtonPointerDown}
                   whileHover={loading ? undefined : { scale: 1.01 }}
                   whileTap={loading ? undefined : { scale: 0.98 }}
-                  className="group relative flex w-full items-center justify-center gap-2 overflow-hidden rounded-xl bg-gradient-to-r from-[#7C3AED] via-[#8B5CF6] to-[#06B6D4] py-3.5 text-sm font-semibold text-white shadow-[0_10px_30px_rgba(139,92,246,0.35)] transition disabled:cursor-not-allowed disabled:opacity-60"
+                  className="group relative flex w-full items-center justify-center gap-2 overflow-hidden rounded-xl bg-gradient-to-r from-[#7C3AED] via-[#8B5CF6] to-[#06B6D4] py-4 text-sm font-semibold text-white shadow-[0_10px_30px_-5px_rgba(139,92,246,0.45),0_0_50px_-15px_rgba(6,182,212,0.4)] transition-shadow duration-500 hover:shadow-[0_14px_40px_-5px_rgba(139,92,246,0.55),0_0_70px_-15px_rgba(6,182,212,0.5)] disabled:cursor-not-allowed disabled:opacity-60"
                   style={{ backgroundSize: "200% auto" }}
+                  animate={reduceMotion ? undefined : { backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"] }}
+                  transition={reduceMotion ? undefined : { duration: 8, repeat: Infinity, ease: "linear" }}
                 >
                   <span className="pointer-events-none absolute inset-0 -translate-x-full bg-white/20 blur-md transition-transform duration-700 group-hover:translate-x-full" />
 
@@ -792,14 +880,23 @@ export function LoginPage() {
                   Sign up
                 </button>
               </p>
+            </div>
+          </motion.div>
+          </motion.div>
 
-              <div className="mt-7 border-t border-white/10 pt-4 text-center text-[11px] text-white/30">
-                Designed &amp; Developed by{" "}
-                <GradientText className="font-semibold" durationSec={5}>
-                  JYOTISH VERMA
-                </GradientText>
-              </div>
-            </motion.div>
+          {/* Premium footer glass panel — its own distinct chip below the
+              card, matching the Linear/Vercel "credit pill" pattern, rather
+              than a plain border-top line buried inside the card. */}
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4, duration: 0.5 }}
+            className="mt-6 flex items-center justify-center gap-1.5 rounded-full border border-white/10 bg-white/[0.04] px-5 py-2.5 text-[11px] text-white/40 backdrop-blur-md"
+          >
+            Designed &amp; Developed by{" "}
+            <GradientText className="font-semibold" durationSec={5}>
+              JYOTISH VERMA
+            </GradientText>
           </motion.div>
         </div>
       </div>
