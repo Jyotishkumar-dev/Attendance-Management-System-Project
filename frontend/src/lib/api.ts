@@ -1,7 +1,9 @@
 import axios from "axios";
 
+const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
+
 export const api = axios.create({
-  baseURL: "/api",
+  baseURL: `${apiUrl}/api`,
 });
 
 let accessToken: string | null = localStorage.getItem("accessToken");
@@ -38,7 +40,7 @@ api.interceptors.response.use(
       try {
         if (!refreshing) {
           refreshing = axios
-            .post("/api/auth/refresh", { refreshToken })
+            .post(`${apiUrl}/api/auth/refresh`, { refreshToken })
             .then((r) => {
               setTokens(r.data.accessToken, refreshToken);
               return r.data.accessToken as string;
